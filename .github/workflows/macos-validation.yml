@@ -1,0 +1,60 @@
+name: macOS validation
+
+on:
+  push:
+    branches: [main]
+  workflow_dispatch:
+
+jobs:
+  package-smoke:
+    name: Package smoke (\${{ matrix.runner }})
+    strategy:
+      fail-fast: false
+      matrix:
+        runner: [macos-15, macos-15-intel]
+    runs-on: \${{ matrix.runner }}
+    timeout-minutes: 25
+    steps:
+      - uses: actions/checkout@v4
+      - name: Shell syntax
+        run: bash -n ./Connect-Codex-Yury-Kurilov.command
+      - name: Download and unpack official macOS builds
+        run: |
+          chmod +x ./Connect-Codex-Yury-Kurilov.command
+          KURILOV_CI=1 bash ./Connect-Codex-Yury-Kurilov.command --dry-run
+
+  live-router-test:
+    name: Full router + Codex + Paseo test
+    runs-on: macos-15
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - name: Check secret
+        id: secret
+        env:
+          KURILOV_API_KEY: \${{ secrets.KURILOV_API_KEY }}
+        run: |
+          if [[ -n "$KURILOV_API_KEY" ]]; then
+            echo "available=true" >> "$GITHUB_OUTPUT"
+          else
+            echo "available=false" >> "$GITHUB_OUTPUT"
+            echo "KURILOV_API_KEY is not configured yet. Full live test is skipped."
+          fi
+      - name: Full clean-machine test
+        if: steps.secret.outputs.available == 'true'
+        env:
+          KURILOV_API_KEY: \${{ secrets.KURILOV_API_KEY }}
+          KURILOV_CI: "1"
+        run: |
+          chmod +x ./Connect-Codex-Yury-Kurilov.command
+          bash ./Connect-Codex-Yury-Kurilov.command
+      - name: Build downloadable macOS package
+        run: |
+          mkdir -p dist/Codex-Yury-Kurilov
+          cp ./Connect-Codex-Yury-Kurilov.command dist/Codex-Yury-Kurilov/
+          chmod +x dist/Codex-Yury-Kurilov/Connect-Codex-Yury-Kurilov.command
+          ditto -c -k --sequesterRsrc --keepParent dist/Codex-Yury-Kurilov dist/Codex-Yury-Kurilov-macOS.zip
+      - uses: actions/upload-artifact@v4
+        with:
+          name: Codex-Yury-Kurilov-macOS
+          path: dist/Codex-Yury-Kurilov-macOS.zip
