@@ -19,9 +19,9 @@ CODEX_HOME_DIR="$ROOT/codex-home"
 CODEX_DIR="$ROOT/codex-$CODEX_VERSION"
 TMP="$ROOT/tmp"
 DRY_RUN=0
-CI_MODE="\${KURILOV_CI:-0}"
+CI_MODE="${KURILOV_CI:-0}"
 
-if [[ "\${1:-}" == "--dry-run" ]]; then
+if [[ "${1:-}" == "--dry-run" ]]; then
   DRY_RUN=1
 fi
 
@@ -118,7 +118,7 @@ if [[ "$DRY_RUN" == "1" ]]; then
   exit 0
 fi
 
-API_KEY="\${KURILOV_API_KEY:-}"
+API_KEY="${KURILOV_API_KEY:-}"
 if [[ -z "$API_KEY" ]]; then
   if [[ "$CI_MODE" == "1" ]]; then
     fail "Для полного CI-теста не задан KURILOV_API_KEY."
@@ -129,7 +129,7 @@ if [[ -z "$API_KEY" ]]; then
   set -e
   [[ $rc -eq 0 ]] || fail "Подключение отменено."
 fi
-[[ \${#API_KEY} -ge 10 && "$API_KEY" != *[[:space:]]* ]] || fail "Ключ доступа выглядит некорректно."
+[[ ${#API_KEY} -ge 10 && "$API_KEY" != *[[:space:]]* ]] || fail "Ключ доступа выглядит некорректно."
 printf '%s' "$API_KEY" > "$TMP/key.txt"
 chmod 600 "$TMP/key.txt"
 
