@@ -7,12 +7,12 @@ on:
 
 jobs:
   package-smoke:
-    name: Package smoke (\${{ matrix.runner }})
+    name: Package smoke (${{ matrix.runner }})
     strategy:
       fail-fast: false
       matrix:
         runner: [macos-15, macos-15-intel]
-    runs-on: \${{ matrix.runner }}
+    runs-on: ${{ matrix.runner }}
     timeout-minutes: 25
     steps:
       - uses: actions/checkout@v4
@@ -32,7 +32,7 @@ jobs:
       - name: Check secret
         id: secret
         env:
-          KURILOV_API_KEY: \${{ secrets.KURILOV_API_KEY }}
+          KURILOV_API_KEY: ${{ secrets.KURILOV_API_KEY }}
         run: |
           if [[ -n "$KURILOV_API_KEY" ]]; then
             echo "available=true" >> "$GITHUB_OUTPUT"
@@ -43,7 +43,7 @@ jobs:
       - name: Full clean-machine test
         if: steps.secret.outputs.available == 'true'
         env:
-          KURILOV_API_KEY: \${{ secrets.KURILOV_API_KEY }}
+          KURILOV_API_KEY: ${{ secrets.KURILOV_API_KEY }}
           KURILOV_CI: "1"
         run: |
           chmod +x ./Connect-Codex-Yury-Kurilov.command
