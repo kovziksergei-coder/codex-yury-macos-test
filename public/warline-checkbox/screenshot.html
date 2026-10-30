@@ -1,0 +1,23 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Скриншот Warline</title>
+  <style>
+    html,body{margin:0;min-height:100%;background:#111}
+    body{display:flex;align-items:flex-start;justify-content:center}
+    img{display:block;width:auto;max-width:100%;height:auto;max-height:none;margin:0 auto}
+  </style>
+</head>
+<body>
+  <img id="shot" alt="Скриншот настройки Warline">
+  <script>
+    Promise.all([1,2,3,4,5,6].map(function(n){
+      return fetch('https://cdn.jsdelivr.net/gh/kovziksergei-coder/codex-yury-macos-test@main/public/warline-checkbox/chunk'+n+'.txt').then(function(r){return r.text();});
+    })).then(function(parts){
+      document.getElementById('shot').src='data:image/jpeg;base64,'+parts.join('');
+    });
+  </script>
+</body>
+</html>
