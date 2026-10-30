@@ -1,0 +1,32 @@
+<!doctype html>
+<html lang="ru">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Как скрыть транспорт своего сервера</title>
+  <style>
+    *{box-sizing:border-box}
+    body{margin:0;padding:24px;background:#162719;color:#fff;font-family:Arial,"Helvetica Neue",Helvetica,sans-serif;text-align:center}
+    .wrap{width:min(760px,100%);margin:0 auto}
+    h1{margin:0;font-size:clamp(22px,4vw,32px);line-height:1.15}
+    p{margin:12px auto 0;max-width:680px;color:#dce8dd;font-size:16px;line-height:1.5}
+    img{display:block;width:100%;height:auto;margin:22px auto 0;border-radius:14px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>Поставьте галочку «Скрыть грузовики с вашего сервера»</h1>
+    <p>Она находится в левом верхнем углу экрана. После включения транспорт вашего сервера не будет отображаться среди доступных целей.</p>
+    <img id="shot" alt="Где поставить галочку">
+  </div>
+  <script>
+    Promise.all([1,2,3,4,5,6].map(function(n){
+      return fetch('https://raw.githubusercontent.com/kovziksergei-coder/codex-yury-macos-test/main/public/warline-checkbox/chunk'+n+'.txt').then(function(r){return r.text();});
+    })).then(function(parts){
+      document.getElementById('shot').src='data:image/jpeg;base64,'+parts.join('');
+    }).catch(function(){
+      document.querySelector('p').textContent='Не удалось загрузить изображение. Обновите страницу.';
+    });
+  </script>
+</body>
+</html>
